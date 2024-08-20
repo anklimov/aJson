@@ -587,13 +587,13 @@ aJsonClass::parse(aJsonStream* stream, char** filter)
 
 // Render a aJsonObject item/entity/structure to text.
 int
-aJsonClass::print(aJsonObject* item, aJsonStream* stream)
+aJsonClass::print(aJsonObject* item, aJsonStream* stream, bool print_hidden)
 {
-  return stream->printValue(item);
+  return stream->printValue(item, print_hidden);
 }
 
 char*
-aJsonClass::print(aJsonObject* item)
+aJsonClass::print(aJsonObject* item, bool print_hidden)
 {
   char* outBuf = (char*) malloc(PRINT_BUFFER_LEN); /* XXX: Dynamic size. */
   if (outBuf == NULL)
@@ -601,7 +601,7 @@ aJsonClass::print(aJsonObject* item)
       return NULL;
     }
   aJsonStringStream stringStream(NULL, outBuf, PRINT_BUFFER_LEN);
-  print(item, &stringStream);
+  print(item, &stringStream, print_hidden);
   return outBuf;
 }
 
@@ -697,7 +697,7 @@ aJsonStream::parseValue(aJsonObject *item, char** filter)
 
 // Render a value to text.
 int
-aJsonStream::printValue(aJsonObject *item)
+aJsonStream::printValue(aJsonObject *item, bool print_hidden)
 {
   int result = 0;
   if (item == NULL)
@@ -728,10 +728,10 @@ aJsonStream::printValue(aJsonObject *item)
     result = this->printString(item);
     break;
   case aJson_Array:
-    result = this->printArray(item);
+    result = this->printArray(item, print_hidden);
     break;
   case aJson_Object:
-    result = this->printObject(item);
+    result = this->printObject(item, print_hidden);
     break;
     }
   return result;
@@ -798,7 +798,7 @@ aJsonStream::parseArray(aJsonObject *item, char** filter)
 
 // Render an array to text
 int
-aJsonStream::printArray(aJsonObject *item)
+aJsonStream::printArray(aJsonObject *item, bool print_hidden)
 {
   if (item == NULL)
     {
@@ -812,7 +812,7 @@ aJsonStream::printArray(aJsonObject *item)
     }
   while (child)
     {
-      if (this->printValue(child) == EOF)
+      if (this->printValue(child, print_hidden) == EOF)
         {
           return EOF;
         }
@@ -910,7 +910,7 @@ aJsonStream::parseObject(aJsonObject *item, char** filter)
 
 // Render an object to text.
 int
-aJsonStream::printObject(aJsonObject *item)
+aJsonStream::printObject(aJsonObject *item, bool print_hidden)
 {
   if (item == NULL)
     {
@@ -924,6 +924,8 @@ aJsonStream::printObject(aJsonObject *item)
     }
   while (child)
     {
+      if (print_hidden || (*child->name != '@'))  ///
+      {
       if (this->printStringPtr(child->name) == EOF)
         {
           return EOF;
@@ -932,12 +934,13 @@ aJsonStream::printObject(aJsonObject *item)
         {
           return EOF;
         }
-      if (this->printValue(child) == EOF)
+      if (this->printValue(child, print_hidden) == EOF)
         {
           return EOF;
         }
+      } ////
       child = child->next;
-      if (child)
+      if (child && (print_hidden || (*child->name != '@') ))
         {
           if (this->print(',') == EOF)
             {

@@ -95,13 +95,13 @@ public:
 	void flush();
 
 	int parseValue(aJsonObject *item, char** filter);
-	int printValue(aJsonObject *item);
+	int printValue(aJsonObject *item, bool print_hidden = true);
 
 	int parseArray(aJsonObject *item, char** filter);
-	int printArray(aJsonObject *item);
+	int printArray(aJsonObject *item, bool print_hidden = true);
 
 	int parseObject(aJsonObject *item, char** filter);
-	int printObject(aJsonObject *item);
+	int printObject(aJsonObject *item, bool print_hidden = true);
 
 protected:
 	/* Blocking load of character, returning EOF if the stream
@@ -198,8 +198,8 @@ public:
         aJsonObject* parse(aJsonStream* stream,char** filter_values); //Read from a file, but only return values include in the char* array filter_values
 	aJsonObject* parse(char *value); //Reads from a string
 	// Render a aJsonObject entity to text for transfer/storage. Free the char* when finished.
-	int print(aJsonObject *item, aJsonStream* stream);
-	char* print(aJsonObject* item);
+	int print(aJsonObject *item, aJsonStream* stream, bool print_hidden = true);
+	char* print(aJsonObject* item , bool print_hidden = true);
 	//Renders a aJsonObject directly to a output stream
 	char stream(aJsonObject *item, aJsonStream* stream);
 	// Delete a aJsonObject entity and all sub-entities.
