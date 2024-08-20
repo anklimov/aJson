@@ -593,7 +593,7 @@ aJsonClass::print(aJsonObject* item, aJsonStream* stream, bool print_hidden)
 }
 
 char*
-aJsonClass::print(aJsonObject* item, bool print_hidden)
+aJsonClass::print(aJsonObject* item)
 {
   char* outBuf = (char*) malloc(PRINT_BUFFER_LEN); /* XXX: Dynamic size. */
   if (outBuf == NULL)
@@ -601,7 +601,7 @@ aJsonClass::print(aJsonObject* item, bool print_hidden)
       return NULL;
     }
   aJsonStringStream stringStream(NULL, outBuf, PRINT_BUFFER_LEN);
-  print(item, &stringStream, print_hidden);
+  print(item, &stringStream);
   return outBuf;
 }
 

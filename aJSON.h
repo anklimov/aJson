@@ -198,8 +198,8 @@ public:
         aJsonObject* parse(aJsonStream* stream,char** filter_values); //Read from a file, but only return values include in the char* array filter_values
 	aJsonObject* parse(char *value); //Reads from a string
 	// Render a aJsonObject entity to text for transfer/storage. Free the char* when finished.
-	int print(aJsonObject *item, aJsonStream* stream, bool print_hidden = true);
-	char* print(aJsonObject* item , bool print_hidden = true);
+	int print(aJsonObject *item, aJsonStream* stream, bool print_hidden=true);
+	char* print(aJsonObject* item);
 	//Renders a aJsonObject directly to a output stream
 	char stream(aJsonObject *item, aJsonStream* stream);
 	// Delete a aJsonObject entity and all sub-entities.
