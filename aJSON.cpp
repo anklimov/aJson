@@ -719,6 +719,7 @@ aJsonStream::printValue(aJsonObject *item, bool print_hidden)
     }
     break;
   case aJson_Int:
+  case aJson_Reserved:
     result = this->printInt(item);
     break;
   case aJson_Float:
